@@ -30,25 +30,25 @@ def moves(gameboard, movesmade):
         workingboard[loc[0]][loc[1]]=workingboard[loc[0]-1][loc[1]]
         workingboard[loc[0]-1][loc[1]]=" "
         templist=boardpriority(workingboard)
-        newboards.append([[thing[:] for thing in workingboard], templist, (sum(templist)+movesmade)])
+        newboards.append([[thing[:] for thing in workingboard], templist, (sum(templist)+movesmade+1), movesmade+1])
         workingboard=[thing[:] for thing in gameboard]
     if(loc[0]<2): #switch down
         workingboard[loc[0]][loc[1]]=workingboard[loc[0]+1][loc[1]]
         workingboard[loc[0]+1][loc[1]]=" "
         templist=boardpriority(workingboard)
-        newboards.append([[thing[:] for thing in workingboard], templist, (sum(templist)+movesmade)])
+        newboards.append([[thing[:] for thing in workingboard], templist, (sum(templist)+movesmade+1), movesmade+1])
         workingboard=[thing[:] for thing in gameboard]
     if(loc[1]>0): #switch left
         workingboard[loc[0]][loc[1]]=workingboard[loc[0]][loc[1]-1]
         workingboard[loc[0]][loc[1]-1]=" "
         templist=boardpriority(workingboard)
-        newboards.append([[thing[:] for thing in workingboard], templist, (sum(templist)+movesmade)])
+        newboards.append([[thing[:] for thing in workingboard], templist, (sum(templist)+movesmade+1), movesmade+1])
         workingboard=[thing[:] for thing in gameboard]
     if(loc[1]<2): #switch right
         workingboard[loc[0]][loc[1]]=workingboard[loc[0]][loc[1]+1]
         workingboard[loc[0]][loc[1]+1]=" "
         templist=boardpriority(workingboard)
-        newboards.append([[thing[:] for thing in workingboard], templist, (sum(templist)+movesmade)])
+        newboards.append([[thing[:] for thing in workingboard], templist, (sum(templist)+movesmade+1), movesmade+1])
     return newboards
         
 raw1=input("Row 1: ")
@@ -65,9 +65,8 @@ if(len(raw3)==3):
 priorities=[]
 priorities=boardpriority(board) #has an array of the distances of each piece of the gameboard from its end place
 gamestates=[]
-gamestates.append([[thing[:] for thing in board], priorities, sum(priorities)])
+gamestates.append([[thing[:] for thing in board], priorities, sum(priorities), 0])
 done=False
-turns=1
 for a in range(len(board)):
     print("".join(board[a]))
 print("Moves Required: 0")
@@ -75,22 +74,21 @@ print("Priority: ", sum(priorities))
 while(not done):
     print("Making Move")
     beststate=gamestates.pop(0)
-    gamestates+=moves(beststate[0], turns)
+    gamestates+=moves(beststate[0], beststate[3])
     #print(gamestates[0])
     gamestates.sort(key=lambda x : x[2])
     print("New Board:")
     for a in range(len(gamestates[0][0])):
         print("".join(gamestates[0][0][a]))
-    print("Moves Required: ", turns)
+    print("Moves Required: ", gamestates[0][3])
     print("Priority: ", gamestates[0][2])
     done=True
     for a in range(len(gamestates[0][0])):
         for b in range(len(gamestates[0][0][a])):
             if(gamestates[0][0][a][b]!=endset[a][b]):
                      done=False
-                     turns+=1
     input("")
 print("Done!")
 for a in range(len(gamestates[0][0])):
     print("".join(gamestates[0][0][a]))
-print("Moves Required: ", turns)
+print("Moves Required: ", gamestates[0][3])
