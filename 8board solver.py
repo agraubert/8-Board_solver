@@ -49,7 +49,9 @@ def moves(gameboard, movesmade):
         workingboard[loc[0]][loc[1]+1]=" "
         templist=boardpriority(workingboard)
         newboards.append([[thing[:] for thing in workingboard], templist, (sum(templist)+movesmade+1), movesmade+1])
+    
     return newboards
+
         
 raw1=input("Row 1: ")
 raw2=input("Row 2: ")
@@ -77,6 +79,22 @@ while(not done):
     gamestates+=moves(beststate[0], beststate[3])
     #print(gamestates[0])
     gamestates.sort(key=lambda x : x[2])
+
+    #i know this part is innefficient, but i need this:
+    remlist=[] #REMoval-LIST
+    for a in range(len(gamestates)):
+        for b in range(len(gamestates)):
+            same=True
+            if(a!=b):
+                for c in range(len(gamestates[a][0])):
+                    for d in range(len(gamestates[a][0][0])):
+                         if(gamestates[a][0][c][d]!=gamestates[b][0][c][d]):
+                                   same=False
+            if(same):
+                if(gamestates[b][2]>=gamestates[b][2]):
+                    remlist.append(b)
+                else:
+                    remlist.append(a)
     print("New Board:")
     for a in range(len(gamestates[0][0])):
         print("".join(gamestates[0][0][a]))
