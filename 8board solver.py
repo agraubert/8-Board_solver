@@ -67,6 +67,7 @@ if(len(raw3)==3):
 priorities=[]
 priorities=boardpriority(board) #has an array of the distances of each piece of the gameboard from its end place
 gamestates=[]
+history=[]
 gamestates.append([[thing[:] for thing in board], priorities, sum(priorities), 0])
 done=False
 for a in range(len(board)):
@@ -74,27 +75,35 @@ for a in range(len(board)):
 print("Moves Required: 0")
 print("Priority: ", sum(priorities))
 while(not done):
+    temp=[]
     print("Making Move")
     beststate=gamestates.pop(0)
-    gamestates+=moves(beststate[0], beststate[3])
+    temp+=moves(beststate[0], beststate[3])
+    gamestates+=temp
+    
+    #i know this part is innefficient, but i need this:
+    remlist=[]
+    if(len(history)>=1):
+        for a in range(len(history)):
+            for b in range(len(gamestates)):
+                same=True
+                for c in range(len(history[a][0])):
+                    for d in range(len(history[a][0][c])):
+                        if(history[a][0][c][d]!=gamestates[b][0][c][d]):
+                            same=False
+                if(same):
+                    if(gamestates[b][2]>=history[a][2]):
+                        remlist.append(b)
+        remlist.sort()
+        if(len(remlist)>=1):
+            for a in range(len(remlist)):
+                gamestates.pop(remlist[a]-a)
+    
+    history+=temp
     #print(gamestates[0])
     gamestates.sort(key=lambda x : x[2])
 
-    #i know this part is innefficient, but i need this:
-    remlist=[] #REMoval-LIST
-    for a in range(len(gamestates)):
-        for b in range(len(gamestates)):
-            same=True
-            if(a!=b):
-                for c in range(len(gamestates[a][0])):
-                    for d in range(len(gamestates[a][0][0])):
-                         if(gamestates[a][0][c][d]!=gamestates[b][0][c][d]):
-                                   same=False
-            if(same):
-                if(gamestates[b][2]>=gamestates[b][2]):
-                    remlist.append(b)
-                else:
-                    remlist.append(a)
+    
     print("New Board:")
     for a in range(len(gamestates[0][0])):
         print("".join(gamestates[0][0][a]))
