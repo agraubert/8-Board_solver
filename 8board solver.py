@@ -103,7 +103,9 @@ while(not done):
     #print(gamestates[0])
     gamestates.sort(key=lambda x : x[2])
 
-    
+    if(len(gamestates)==0):
+        print("No Solution")
+        break
     print("New Board:")
     for a in range(len(gamestates[0][0])):
         print("".join(gamestates[0][0][a]))
